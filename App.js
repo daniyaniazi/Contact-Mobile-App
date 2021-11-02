@@ -4,12 +4,14 @@ import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import Constants from "expo-constants";
 import Home from "./src/screens/Home";
 import CreateContact from "./src/screens/CreateContact";
+import Profile from "./src/screens/Profile";
 
 export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       {/* <Home /> */}
-      <CreateContact />
+      {/* <CreateContact /> */}
+      <Profile />
       <StatusBar style="auto" />
     </SafeAreaView>
   );
