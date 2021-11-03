@@ -9,19 +9,15 @@ import {
 } from "react-native";
 import { Card, FAB } from "react-native-paper";
 
-const Home = () => {
+const Home = ({ navigation }) => {
   const data = [
     { id: 1, name: "Daniya", position: "Web developer" },
     { id: 2, name: "Fraeeha", position: "Web developer" },
     { id: 3, name: "Suneela", position: "Web developer" },
     { id: 4, name: "Areeba Akhatr", position: "Web developer" },
-    { id: 5, name: "Daniya", position: "Web developer" },
-    { id: 6, name: "Fraeeha", position: "Web developer" },
-    { id: 7, name: "Suneela", position: "Web developer" },
-    { id: 8, name: "Areeba Akhatr", position: "Web developer" },
   ];
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <FlatList
         data={data}
         keyExtractor={(item) => `${item.id}`}
@@ -43,10 +39,10 @@ const Home = () => {
         )}
       />
       <FAB
+        onPress={() => navigation.navigate("Create-Contact")}
         style={styles.fab}
         small={false}
         icon="plus"
-        onPress={() => console.log("Pressed")}
       />
     </View>
   );
@@ -73,6 +69,7 @@ const styles = StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 0,
+    backgroundColor: "#542cc9",
   },
 });
 

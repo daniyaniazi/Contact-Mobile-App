@@ -111,7 +111,7 @@ const CreateContact = () => {
                 Upload
               </Button>
               <Button
-                icon="gallery"
+                icon="image"
                 mode="contained"
                 onPress={() => setModal(false)}
               >
@@ -154,6 +154,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+    marginBottom: 10,
   },
   modalOptionView: {
     flexDirection: "row",
