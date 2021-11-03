@@ -14,9 +14,24 @@ export default function App() {
   return (
     <NavigationContainer>
       <SafeAreaView style={styles.container}>
-        <Stack.Navigator initialRouteName="Home">
+        <Stack.Navigator
+          initialRouteName="Home"
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: "#431ba5",
+            },
+            headerTintColor: "#fff",
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
+          }}
+        >
           <Stack.Screen name="Home" component={Home} />
-          <Stack.Screen name="Create-Contact" component={CreateContact} />
+          <Stack.Screen
+            name="Create-Contact"
+            component={CreateContact}
+            options={{ title: "Create Contact" }}
+          />
           <Stack.Screen name="Profile" component={Profile} />
         </Stack.Navigator>
 
@@ -30,6 +45,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    marginTop: Constants.statusBarHeight,
+    // marginTop: Constants.statusBarHeight,
   },
 });

@@ -55,17 +55,11 @@ const Profile = () => {
         <Button
           icon="account-edit"
           mode="contained"
-          onPress={() => setModal(false)}
           style={styles.optionButton}
         >
           Edit
         </Button>
-        <Button
-          icon="delete"
-          mode="contained"
-          onPress={() => setModal(false)}
-          style={styles.optionButton}
-        >
+        <Button icon="delete" mode="contained" style={styles.optionButton}>
           Delete
         </Button>
       </View>

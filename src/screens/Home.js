@@ -22,14 +22,18 @@ const Home = ({ navigation }) => {
         data={data}
         keyExtractor={(item) => `${item.id}`}
         renderItem={({ item }) => (
-          <Card style={styles.card}>
+          <Card
+            style={styles.card}
+            onPress={() => navigation.navigate("Profile")}
+          >
             <View style={styles.cardView}>
               <Image
                 style={styles.img}
                 source={{
-                  uri: " https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=688&q=80",
+                  uri: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTJ8fHBlcnNvbnxlbnwwfDJ8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
                 }}
               />
+
               <View>
                 <Text>{item.name}</Text>
                 <Text style={{ fontWeight: "bold" }}>{item.position}</Text>
