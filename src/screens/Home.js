@@ -11,10 +11,46 @@ import { Card, FAB } from "react-native-paper";
 
 const Home = ({ navigation }) => {
   const data = [
-    { id: 1, name: "Daniya", position: "Web developer" },
-    { id: 2, name: "Fraeeha", position: "Web developer" },
-    { id: 3, name: "Suneela", position: "Web developer" },
-    { id: 4, name: "Areeba Akhatr", position: "Web developer" },
+    {
+      id: 1,
+      name: "Daniya",
+      position: "Web developer",
+      email: "abc@abc.com",
+      salary: 90000,
+      phone: "444 555 6666",
+      picture:
+        "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTJ8fHBlcnNvbnxlbnwwfDJ8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+    },
+    {
+      id: 2,
+      name: "Fraeeha",
+      position: "Web developer",
+      email: "abc@abc.com",
+      salary: 90000,
+      phone: "444 555 6666",
+      picture:
+        "https://media.istockphoto.com/photos/learn-to-love-yourself-first-picture-id1291208214?b=1&k=20&m=1291208214&s=170667a&w=0&h=sAq9SonSuefj3d4WKy4KzJvUiLERXge9VgZO-oqKUOo=",
+    },
+    {
+      id: 3,
+      name: "Suneela",
+      position: "Web developer",
+      email: "abc@abc.com",
+      salary: 90000,
+      phone: "444 555 6666",
+      picture:
+        "https://media.istockphoto.com/photos/learn-to-love-yourself-first-picture-id1291208214?b=1&k=20&m=1291208214&s=170667a&w=0&h=sAq9SonSuefj3d4WKy4KzJvUiLERXge9VgZO-oqKUOo=",
+    },
+    {
+      id: 4,
+      name: "Areeba Akhatr",
+      position: "Web developer",
+      email: "abc@abc.com",
+      phone: "444 555 6666",
+      salary: 90000,
+      picture:
+        "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTJ8fHBlcnNvbnxlbnwwfDJ8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+    },
   ];
   return (
     <View style={{ flex: 1 }}>
@@ -24,13 +60,17 @@ const Home = ({ navigation }) => {
         renderItem={({ item }) => (
           <Card
             style={styles.card}
-            onPress={() => navigation.navigate("Profile")}
+            onPress={() =>
+              navigation.navigate("Profile", {
+                item: item,
+              })
+            }
           >
             <View style={styles.cardView}>
               <Image
                 style={styles.img}
                 source={{
-                  uri: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTJ8fHBlcnNvbnxlbnwwfDJ8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                  uri: item.picture,
                 }}
               />
 

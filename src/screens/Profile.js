@@ -3,7 +3,9 @@ import { Image, StyleSheet, Text, View, Linking, Platform } from "react-native";
 import { Button, Title, Card } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
-const Profile = () => {
+const Profile = (props) => {
+  const { name, email, salary, phone, position, picture } =
+    props.route.params.item;
   const openDial = () => {
     if (Platform.OS === "android") {
       Linking.openURL("tel:1234455566");
@@ -22,13 +24,13 @@ const Profile = () => {
         <Image
           style={styles.profileImg}
           source={{
-            uri: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTJ8fHBlcnNvbnxlbnwwfDJ8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+            uri: picture,
           }}
         />
       </View>
       <View style={styles.userInfoView}>
-        <Title>Daniya Niazi</Title>
-        <Text>Web Developer</Text>
+        <Title>{name}</Title>
+        <Text>{position}</Text>
       </View>
       <Card
         style={styles.userCard}
@@ -36,19 +38,19 @@ const Profile = () => {
       >
         <View style={styles.userCardView}>
           <MaterialIcons name="email" size={32} color="blue" />
-          <Text style={styles.infoText}>abbc@abc.com</Text>
+          <Text style={styles.infoText}>{email}</Text>
         </View>
       </Card>
       <Card style={styles.userCard} onPress={() => openDial()}>
         <View style={styles.userCardView}>
           <MaterialIcons name="phone" size={32} color="blue" />
-          <Text style={styles.infoText}>+92 3333 99939393</Text>
+          <Text style={styles.infoText}>+{phone}</Text>
         </View>
       </Card>
       <Card style={styles.userCard}>
         <View style={styles.userCardView}>
           <MaterialIcons name="attach-money" size={32} color="blue" />
-          <Text style={styles.infoText}>$20.00</Text>
+          <Text style={styles.infoText}>${salary}.00</Text>
         </View>
       </Card>
       <View style={styles.profileOptionView}>
