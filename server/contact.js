@@ -5,7 +5,7 @@ const ContactSchema = new mongoose.Schema({
   email: String,
   phone: String,
   picture: String,
-  salary: String,
+  salary: Number,
   position: String,
 });
 

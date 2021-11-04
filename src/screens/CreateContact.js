@@ -40,6 +40,10 @@ const CreateContact = () => {
     if (!result.cancelled) {
       setPickedImagePath(result.uri);
       setModal(false);
+      setUser({
+        ...user,
+        picture: result.uri,
+      });
       // handleProfilePictureUpload(result.uri);
     }
   };
@@ -58,6 +62,10 @@ const CreateContact = () => {
 
     if (!result.cancelled) {
       setPickedImagePath(result.uri);
+      setUser({
+        ...user,
+        picture: result.uri,
+      });
       setModal(false);
       // handleProfilePictureUpload(result.uri);
     }
@@ -75,11 +83,31 @@ const CreateContact = () => {
       .then((res) => res.json())
       .then((data) => {
         setPickedImagePath(data.url);
+        setUser({
+          ...user,
+          picture: data.url,
+        });
         setModal(false);
       });
   };
-  const saveContact = () => {
-    handleProfilePictureUpload(pickedImagePath);
+  const saveContact = async () => {
+    await handleProfilePictureUpload(pickedImagePath);
+    await fetch("http://5a2d-175-107-212-41.ngrok.io/add", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify(user),
+    });
+    setUser({
+      name: "",
+      phone: "",
+      email: "",
+      salary: "",
+      picture: "",
+      position: "",
+    });
   };
   const [user, setUser] = useState({
     name: "",
@@ -87,6 +115,7 @@ const CreateContact = () => {
     email: "",
     salary: "",
     picture: "",
+    position: "",
   });
   const [modal, setModal] = useState(false);
 
@@ -136,6 +165,19 @@ const CreateContact = () => {
           setUser({
             ...user,
             email: text,
+          })
+        }
+      />
+      <TextInput
+        mode="outlined"
+        label="Postion"
+        right={<TextInput.Icon name="home" />}
+        style={styles.inputField}
+        value={user.position}
+        onChangeText={(text) =>
+          setUser({
+            ...user,
+            position: text,
           })
         }
       />

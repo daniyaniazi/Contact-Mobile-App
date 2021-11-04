@@ -1,14 +1,16 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
 
 const mongoose = require("mongoose");
 require("./contact");
-
+app.use(cors());
 app.use(express.json());
 
 const Contact = mongoose.model("contact");
 
-const mongoUri = "put your url here";
+const mongoUri =
+  "mongodb+srv://admin:admin@cluster0.ltxu4.mongodb.net/contacts?retryWrites=true&w=majority";
 
 mongoose.connect(mongoUri, {
   useNewUrlParser: true,
@@ -33,6 +35,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/add", (req, res) => {
+  console.log(req.body);
   const contact = new Contact({
     name: req.body.name,
     email: req.body.email,

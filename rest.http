@@ -1,0 +1,14 @@
+GET http://localhost:3000
+####
+POST http://localhost:3000/add
+Content-Type: application/json
+
+{ 
+	"name":"FAREEHA",
+    "email": "aa.com",
+    "phone": "222 3334 6666",
+    "picture": "https://res.cloudinary.com/daniya/image/upload/v1636028163/m4hnuce4xabhdjsg9k4o.png",
+    "salary": 200,
+    "position": "web developer"
+	
+}
