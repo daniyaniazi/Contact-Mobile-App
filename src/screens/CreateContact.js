@@ -8,9 +8,79 @@ import {
   FlatList,
   Pressable,
   Modal,
+  Alert,
 } from "react-native";
 import { Card, FAB, TextInput, Button } from "react-native-paper";
+import * as ImagePicker from "expo-image-picker";
+
 const CreateContact = () => {
+  // The path of the picked image
+  const [pickedImagePath, setPickedImagePath] = useState(
+    "https://res.cloudinary.com/daniya/image/upload/v1636028163/m4hnuce4xabhdjsg9k4o.png"
+  );
+
+  const showImagePicker = async () => {
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      Alert.alert("You've refused to allow this appp to access your photos!");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    // Explore the result
+
+    if (!result.cancelled) {
+      setPickedImagePath(result.uri);
+      setModal(false);
+      // handleProfilePictureUpload(result.uri);
+    }
+  };
+
+  const openCamera = async () => {
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      Alert.alert("You've refused to allow this appp to access your camera!");
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync();
+
+    // Explore the result
+
+    if (!result.cancelled) {
+      setPickedImagePath(result.uri);
+      setModal(false);
+      // handleProfilePictureUpload(result.uri);
+    }
+  };
+  const handleProfilePictureUpload = async (image) => {
+    const data = new FormData();
+    data.append("file", image);
+    data.append("upload_preset", "ContactApp");
+    data.append("cloud_name", "daniya");
+
+    await fetch("	https://api.cloudinary.com/v1_1/daniya/image/upload", {
+      method: "POST",
+      body: data,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setPickedImagePath(data.url);
+        setModal(false);
+      });
+  };
+  const saveContact = () => {
+    handleProfilePictureUpload(pickedImagePath);
+  };
   const [user, setUser] = useState({
     name: "",
     phone: "",
@@ -22,6 +92,13 @@ const CreateContact = () => {
 
   return (
     <View style={styles.root}>
+      <Image
+        style={styles.profileImg}
+        source={{
+          uri: pickedImagePath,
+        }}
+      />
+
       <TextInput
         style={styles.inputField}
         mode="outlined"
@@ -76,7 +153,12 @@ const CreateContact = () => {
         }
       />
       <Button
-        icon="upload"
+        icon={
+          pickedImagePath ===
+          "https://res.cloudinary.com/daniya/image/upload/v1636028163/m4hnuce4xabhdjsg9k4o.png"
+            ? "camera"
+            : "check"
+        }
         mode="contained"
         onPress={() => setModal(true)}
         style={styles.inputField}
@@ -87,7 +169,7 @@ const CreateContact = () => {
         style={styles.inputField}
         icon="content-save"
         mode="contained"
-        onPress={() => setModal(true)}
+        onPress={() => saveContact("save")}
       >
         Save
       </Button>
@@ -106,14 +188,14 @@ const CreateContact = () => {
               <Button
                 icon="camera"
                 mode="contained"
-                onPress={() => setModal(false)}
+                onPress={() => showImagePicker()}
               >
                 Upload
               </Button>
               <Button
                 icon="image"
                 mode="contained"
-                onPress={() => setModal(false)}
+                onPress={() => openCamera()}
               >
                 Gallery
               </Button>
@@ -160,6 +242,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     padding: 10,
+  },
+  profileImg: {
+    width: 100,
+    height: 100,
+    borderRadius: 100 / 2,
+    alignSelf: "center",
   },
 });
 
