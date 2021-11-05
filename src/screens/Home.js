@@ -14,7 +14,7 @@ const Home = ({ navigation }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const fetchUser = async () => {
-    await fetch("http://d93e-175-107-212-41.ngrok.io", {
+    await fetch("http://0f24-175-107-212-41.ngrok.io", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -31,13 +31,13 @@ const Home = ({ navigation }) => {
     fetchUser();
   }, []);
 
-  if (loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center" }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <View style={{ flex: 1, justifyContent: "center" }}>
+  //       <ActivityIndicator size="large" />
+  //     </View>
+  //   );
+  // }
   return (
     <View style={{ flex: 1 }}>
       <FlatList

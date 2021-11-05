@@ -1,5 +1,13 @@
 import React from "react";
-import { Image, StyleSheet, Text, View, Linking, Platform } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  Linking,
+  Platform,
+  Alert,
+} from "react-native";
 import { Button, Title, Card } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -12,6 +20,25 @@ const Profile = (props) => {
     } else {
       Linking.openURL(`telprompt:${phone}`);
     }
+  };
+  const deleteContact = async () => {
+    await fetch("http://0f24-175-107-212-41.ngrok.io/delete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id: _id }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        Alert.alert(`${data.name} deleted`);
+        props.navigation.navigate("Home");
+      })
+      .catch((err) => {
+        console.log(err);
+        Alert.alert("Error Ocuured", err);
+      });
   };
   return (
     <View style={styles.root}>
@@ -58,10 +85,26 @@ const Profile = (props) => {
           icon="account-edit"
           mode="contained"
           style={styles.optionButton}
+          onPress={() =>
+            props.navigation.navigate("Create-Contact", {
+              _id,
+              name,
+              email,
+              salary,
+              phone,
+              position,
+              picture,
+            })
+          }
         >
           Edit
         </Button>
-        <Button icon="delete" mode="contained" style={styles.optionButton}>
+        <Button
+          icon="delete"
+          mode="contained"
+          style={styles.optionButton}
+          onPress={() => deleteContact()}
+        >
           Delete
         </Button>
       </View>

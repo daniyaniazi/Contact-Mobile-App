@@ -13,15 +13,43 @@ import {
 import { Card, FAB, TextInput, Button } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 
-const CreateContact = ({ navigation }) => {
+const CreateContact = ({ navigation, route }) => {
+  const getUserInfo = () => {
+    if (route.params) {
+      return {
+        name: route.params.name,
+        phone: route.params.phone,
+        email: route.params.email,
+        salary: route.params.salary,
+        picture: route.params.picture,
+        position: route.params.position,
+      };
+    }
+    return {
+      name: "",
+      phone: "",
+      email: "",
+      salary: "",
+      picture: "",
+      position: "",
+    };
+  };
+
+  const [user, setUser] = useState(getUserInfo());
+  const [modal, setModal] = useState(false);
+
   // The path of the picked image
   const [pickedImagePath, setPickedImagePath] = useState(
-    "https://res.cloudinary.com/daniya/image/upload/v1636028163/m4hnuce4xabhdjsg9k4o.png"
+    getUserInfo().picture
+      ? getUserInfo().picture
+      : "https://res.cloudinary.com/daniya/image/upload/v1636028163/m4hnuce4xabhdjsg9k4o.png"
   );
 
   const showImagePicker = async () => {
     const permissionResult =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
+      await ImagePicker.requestMediaLibraryPermissionsAsync().catch((err) =>
+        Alert.alert("Error Ocuured")
+      );
 
     if (permissionResult.granted === false) {
       Alert.alert("You've refused to allow this appp to access your photos!");
@@ -33,30 +61,35 @@ const CreateContact = ({ navigation }) => {
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
-    });
+    }).catch((err) => Alert.alert("Error Ocuured"));
 
     // Explore the result
 
     if (!result.cancelled) {
       setPickedImagePath(result.uri);
-      setModal(false);
       setUser({
         ...user,
         picture: result.uri,
       });
+      setModal(false);
       // handleProfilePictureUpload(result.uri);
     }
   };
 
   const openCamera = async () => {
-    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    const permissionResult =
+      await ImagePicker.requestCameraPermissionsAsync().catch((err) =>
+        Alert.alert("Error Ocuured")
+      );
 
     if (permissionResult.granted === false) {
       Alert.alert("You've refused to allow this appp to access your camera!");
       return;
     }
 
-    const result = await ImagePicker.launchCameraAsync();
+    const result = await ImagePicker.launchCameraAsync().catch((err) =>
+      Alert.alert("Error Ocuured")
+    );
 
     // Explore the result
 
@@ -71,8 +104,13 @@ const CreateContact = ({ navigation }) => {
     }
   };
   const handleProfilePictureUpload = async (image) => {
+    let newfile = {
+      uri: image,
+      type: `${image.split("/").pop().split(".")[0]}/${image.split(".").pop()}`,
+      name: `${image.split(".").pop()}`,
+    };
     const data = new FormData();
-    data.append("file", image);
+    data.append("file", newfile);
     data.append("upload_preset", "ContactApp");
     data.append("cloud_name", "daniya");
 
@@ -88,6 +126,10 @@ const CreateContact = ({ navigation }) => {
         setPickedImagePath(data.url);
         setModal(false);
         return data;
+      })
+      .catch((err) => {
+        console.log(err);
+        Alert.alert("Error Ocuured");
       });
     return res;
   };
@@ -100,8 +142,8 @@ const CreateContact = ({ navigation }) => {
         data.url ||
         "https://res.cloudinary.com/daniya/image/upload/v1636028163/m4hnuce4xabhdjsg9k4o.png",
     };
-    console.log(newUser);
-    await fetch("http://d93e-175-107-212-41.ngrok.io/add", {
+
+    await fetch("http://0f24-175-107-212-41.ngrok.io/add", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -123,15 +165,31 @@ const CreateContact = ({ navigation }) => {
       position: "",
     });
   };
-  const [user, setUser] = useState({
-    name: "",
-    phone: "",
-    email: "",
-    salary: "",
-    picture: "",
-    position: "",
-  });
-  const [modal, setModal] = useState(false);
+  const updateContact = async () => {
+    const data = await handleProfilePictureUpload(pickedImagePath);
+
+    const newUser = {
+      ...user,
+      picture:
+        data.url ||
+        "https://res.cloudinary.com/daniya/image/upload/v1636028163/m4hnuce4xabhdjsg9k4o.png",
+      id: route.params._id,
+    };
+
+    await fetch("http://0f24-175-107-212-41.ngrok.io/update", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify(newUser),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        Alert.alert(`${data.name} has been updated successfully`);
+        navigation.navigate("Home");
+      });
+  };
 
   return (
     <View style={styles.root}>
@@ -200,7 +258,8 @@ const CreateContact = ({ navigation }) => {
         label="Salary"
         right={<TextInput.Icon name="currency-usd" />}
         style={styles.inputField}
-        value={user.salary}
+        value={`${user.salary}`}
+        keyboardType="number-pad"
         onChangeText={(text) =>
           setUser({
             ...user,
@@ -221,14 +280,26 @@ const CreateContact = ({ navigation }) => {
       >
         Upload Image
       </Button>
-      <Button
-        style={styles.inputField}
-        icon="content-save"
-        mode="contained"
-        onPress={() => saveContact("save")}
-      >
-        Save
-      </Button>
+      {route.params ? (
+        <Button
+          style={styles.inputField}
+          icon="content-save"
+          mode="contained"
+          onPress={() => updateContact()}
+        >
+          Upadate
+        </Button>
+      ) : (
+        <Button
+          style={styles.inputField}
+          icon="content-save"
+          mode="contained"
+          onPress={() => saveContact()}
+        >
+          Save
+        </Button>
+      )}
+
       <Modal
         animationType="slide"
         transparent={true}
