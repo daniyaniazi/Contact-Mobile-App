@@ -9,11 +9,13 @@ import {
   Pressable,
   Modal,
   Alert,
+  KeyboardAvoidingView,
 } from "react-native";
 import { Card, FAB, TextInput, Button } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 
 const CreateContact = ({ navigation, route }) => {
+  const [enableKeyBoardShift, setenableKeyBoardShift] = useState(false);
   const getUserInfo = () => {
     if (route.params) {
       return {
@@ -192,149 +194,156 @@ const CreateContact = ({ navigation, route }) => {
   };
 
   return (
-    <View style={styles.root}>
-      <Image
-        style={styles.profileImg}
-        source={{
-          uri: pickedImagePath,
-        }}
-      />
-
-      <TextInput
-        style={styles.inputField}
-        mode="outlined"
-        label="Name"
-        value={user.name}
-        right={<TextInput.Icon name="account" />}
-        onChangeText={(text) =>
-          setUser({
-            ...user,
-            name: text,
-          })
-        }
-      />
-      <TextInput
-        mode="outlined"
-        label="Phone"
-        value={user.phone}
-        style={styles.inputField}
-        right={<TextInput.Icon name="phone" />}
-        onChangeText={(text) =>
-          setUser({
-            ...user,
-            phone: text,
-          })
-        }
-        keyboardType="number-pad"
-      />
-      <TextInput
-        mode="outlined"
-        label="Email"
-        right={<TextInput.Icon name="email" />}
-        style={styles.inputField}
-        value={user.email}
-        onChangeText={(text) =>
-          setUser({
-            ...user,
-            email: text,
-          })
-        }
-      />
-      <TextInput
-        mode="outlined"
-        label="Postion"
-        right={<TextInput.Icon name="home" />}
-        style={styles.inputField}
-        value={user.position}
-        onChangeText={(text) =>
-          setUser({
-            ...user,
-            position: text,
-          })
-        }
-      />
-      <TextInput
-        mode="outlined"
-        label="Salary"
-        right={<TextInput.Icon name="currency-usd" />}
-        style={styles.inputField}
-        value={`${user.salary}`}
-        keyboardType="number-pad"
-        onChangeText={(text) =>
-          setUser({
-            ...user,
-            salary: text,
-          })
-        }
-      />
-      <Button
-        icon={
-          pickedImagePath ===
-          "https://res.cloudinary.com/daniya/image/upload/v1636028163/m4hnuce4xabhdjsg9k4o.png"
-            ? "camera"
-            : "check"
-        }
-        mode="contained"
-        onPress={() => setModal(true)}
-        style={styles.inputField}
-      >
-        Upload Image
-      </Button>
-      {route.params ? (
-        <Button
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior="position"
+      enabled={enableKeyBoardShift}
+    >
+      <View style={styles.root}>
+        <Image
+          style={styles.profileImg}
+          source={{
+            uri: pickedImagePath,
+          }}
+        />
+        <TextInput
           style={styles.inputField}
-          icon="content-save"
-          mode="contained"
-          onPress={() => updateContact()}
-        >
-          Upadate
-        </Button>
-      ) : (
-        <Button
+          mode="outlined"
+          label="Name"
+          value={user.name}
+          right={<TextInput.Icon name="account" />}
+          onChangeText={(text) =>
+            setUser({
+              ...user,
+              name: text,
+            })
+          }
+        />
+        <TextInput
+          mode="outlined"
+          label="Phone"
+          value={user.phone}
           style={styles.inputField}
-          icon="content-save"
-          mode="contained"
-          onPress={() => saveContact()}
-        >
-          Save
-        </Button>
-      )}
+          right={<TextInput.Icon name="phone" />}
+          onChangeText={(text) =>
+            setUser({
+              ...user,
+              phone: text,
+            })
+          }
+          keyboardType="number-pad"
+        />
+        <TextInput
+          mode="outlined"
+          label="Email"
+          right={<TextInput.Icon name="email" />}
+          style={styles.inputField}
+          value={user.email}
+          onChangeText={(text) =>
+            setUser({
+              ...user,
+              email: text,
+            })
+          }
+        />
+        <TextInput
+          mode="outlined"
+          label="Postion"
+          right={<TextInput.Icon name="home" />}
+          style={styles.inputField}
+          value={user.position}
+          onFocus={() => setenableKeyBoardShift(true)}
+          onChangeText={(text) =>
+            setUser({
+              ...user,
+              position: text,
+            })
+          }
+        />
+        <TextInput
+          mode="outlined"
+          label="Salary"
+          right={<TextInput.Icon name="currency-usd" />}
+          style={styles.inputField}
+          value={`${user.salary}`}
+          keyboardType="number-pad"
+          onFocus={() => setenableKeyBoardShift(true)}
+          onChangeText={(text) =>
+            setUser({
+              ...user,
+              salary: text,
+            })
+          }
+        />
 
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modal}
-        // back button
-        onRequestClose={() => {
-          setModal(false);
-        }}
-      >
-        <View style={styles.modalView}>
-          <View style={styles.modalContainerView}>
-            <View style={styles.modalOptionView}>
-              <Button
-                icon="camera"
-                mode="contained"
-                onPress={() => showImagePicker()}
-              >
-                Upload
-              </Button>
-              <Button
-                icon="image"
-                mode="contained"
-                onPress={() => openCamera()}
-              >
-                Gallery
+        <Button
+          icon={
+            pickedImagePath ===
+            "https://res.cloudinary.com/daniya/image/upload/v1636028163/m4hnuce4xabhdjsg9k4o.png"
+              ? "camera"
+              : "check"
+          }
+          mode="contained"
+          onPress={() => setModal(true)}
+          style={styles.inputField}
+        >
+          Upload Image
+        </Button>
+        {route.params ? (
+          <Button
+            style={styles.inputField}
+            icon="content-save"
+            mode="contained"
+            onPress={() => updateContact()}
+          >
+            Upadate
+          </Button>
+        ) : (
+          <Button
+            style={styles.inputField}
+            icon="content-save"
+            mode="contained"
+            onPress={() => saveContact()}
+          >
+            Save
+          </Button>
+        )}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modal}
+          // back button
+          onRequestClose={() => {
+            setModal(false);
+          }}
+        >
+          <View style={styles.modalView}>
+            <View style={styles.modalContainerView}>
+              <View style={styles.modalOptionView}>
+                <Button
+                  icon="camera"
+                  mode="contained"
+                  onPress={() => showImagePicker()}
+                >
+                  Upload
+                </Button>
+                <Button
+                  icon="image"
+                  mode="contained"
+                  onPress={() => openCamera()}
+                >
+                  Gallery
+                </Button>
+              </View>
+
+              <Button icon="close" mode="text" onPress={() => setModal(false)}>
+                Close
               </Button>
             </View>
-
-            <Button icon="close" mode="text" onPress={() => setModal(false)}>
-              Close
-            </Button>
           </View>
-        </View>
-      </Modal>
-    </View>
+        </Modal>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 const styles = StyleSheet.create({
