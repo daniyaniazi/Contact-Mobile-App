@@ -4,13 +4,13 @@ import { Button, Title, Card } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
 const Profile = (props) => {
-  const { name, email, salary, phone, position, picture } =
+  const { _id, name, email, salary, phone, position, picture } =
     props.route.params.item;
   const openDial = () => {
     if (Platform.OS === "android") {
-      Linking.openURL("tel:1234455566");
+      Linking.openURL(`tel:${phone}`);
     } else {
-      Linking.openURL("telprompt:1234455566");
+      Linking.openURL(`telprompt:${phone}`);
     }
   };
   return (
@@ -30,11 +30,11 @@ const Profile = (props) => {
       </View>
       <View style={styles.userInfoView}>
         <Title>{name}</Title>
-        <Text>{position}</Text>
+        <Text>{position} </Text>
       </View>
       <Card
         style={styles.userCard}
-        onPress={() => Linking.openURL("mailto:abbc@abc.com")}
+        onPress={() => Linking.openURL(`mailto:${email}`)}
       >
         <View style={styles.userCardView}>
           <MaterialIcons name="email" size={32} color="blue" />

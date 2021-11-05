@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -6,57 +6,45 @@ import {
   View,
   Image,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 import { Card, FAB } from "react-native-paper";
 
 const Home = ({ navigation }) => {
-  const data = [
-    {
-      id: 1,
-      name: "Daniya",
-      position: "Web developer",
-      email: "abc@abc.com",
-      salary: 90000,
-      phone: "444 555 6666",
-      picture:
-        "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTJ8fHBlcnNvbnxlbnwwfDJ8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    },
-    {
-      id: 2,
-      name: "Fraeeha",
-      position: "Web developer",
-      email: "abc@abc.com",
-      salary: 90000,
-      phone: "444 555 6666",
-      picture:
-        "https://media.istockphoto.com/photos/learn-to-love-yourself-first-picture-id1291208214?b=1&k=20&m=1291208214&s=170667a&w=0&h=sAq9SonSuefj3d4WKy4KzJvUiLERXge9VgZO-oqKUOo=",
-    },
-    {
-      id: 3,
-      name: "Suneela",
-      position: "Web developer",
-      email: "abc@abc.com",
-      salary: 90000,
-      phone: "444 555 6666",
-      picture:
-        "https://media.istockphoto.com/photos/learn-to-love-yourself-first-picture-id1291208214?b=1&k=20&m=1291208214&s=170667a&w=0&h=sAq9SonSuefj3d4WKy4KzJvUiLERXge9VgZO-oqKUOo=",
-    },
-    {
-      id: 4,
-      name: "Areeba Akhatr",
-      position: "Web developer",
-      email: "abc@abc.com",
-      phone: "444 555 6666",
-      salary: 90000,
-      picture:
-        "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTJ8fHBlcnNvbnxlbnwwfDJ8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-    },
-  ];
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const fetchUser = async () => {
+    await fetch("http://d93e-175-107-212-41.ngrok.io", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setData(data);
+        setLoading(false);
+      });
+  };
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
   return (
     <View style={{ flex: 1 }}>
       <FlatList
+        refreshing={loading}
+        onRefresh={() => fetchUser()}
         data={data}
-        keyExtractor={(item) => `${item.id}`}
+        keyExtractor={(item) => `${item._id}`}
         renderItem={({ item }) => (
           <Card
             style={styles.card}

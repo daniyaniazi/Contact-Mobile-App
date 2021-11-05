@@ -13,7 +13,7 @@ import {
 import { Card, FAB, TextInput, Button } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 
-const CreateContact = () => {
+const CreateContact = ({ navigation }) => {
   // The path of the picked image
   const [pickedImagePath, setPickedImagePath] = useState(
     "https://res.cloudinary.com/daniya/image/upload/v1636028163/m4hnuce4xabhdjsg9k4o.png"
@@ -76,30 +76,44 @@ const CreateContact = () => {
     data.append("upload_preset", "ContactApp");
     data.append("cloud_name", "daniya");
 
-    await fetch("	https://api.cloudinary.com/v1_1/daniya/image/upload", {
-      method: "POST",
-      body: data,
-    })
+    const res = await fetch(
+      "https://api.cloudinary.com/v1_1/daniya/image/upload",
+      {
+        method: "POST",
+        body: data,
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         setPickedImagePath(data.url);
-        setUser({
-          ...user,
-          picture: data.url,
-        });
         setModal(false);
+        return data;
       });
+    return res;
   };
   const saveContact = async () => {
-    await handleProfilePictureUpload(pickedImagePath);
-    await fetch("http://5a2d-175-107-212-41.ngrok.io/add", {
+    const data = await handleProfilePictureUpload(pickedImagePath);
+
+    const newUser = {
+      ...user,
+      picture:
+        data.url ||
+        "https://res.cloudinary.com/daniya/image/upload/v1636028163/m4hnuce4xabhdjsg9k4o.png",
+    };
+    console.log(newUser);
+    await fetch("http://d93e-175-107-212-41.ngrok.io/add", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
 
-      body: JSON.stringify(user),
-    });
+      body: JSON.stringify(newUser),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        Alert.alert(`${data.name} has been added successfully`);
+        navigation.navigate("Home");
+      });
     setUser({
       name: "",
       phone: "",

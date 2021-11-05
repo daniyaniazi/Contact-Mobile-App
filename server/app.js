@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
+require("dotenv").config();
 
 const mongoose = require("mongoose");
 require("./contact");
@@ -9,8 +10,7 @@ app.use(express.json());
 
 const Contact = mongoose.model("contact");
 
-const mongoUri =
-  "mongodb+srv://admin:admin@cluster0.ltxu4.mongodb.net/contacts?retryWrites=true&w=majority";
+const mongoUri = process.env.MONGO_URI;
 
 mongoose.connect(mongoUri, {
   useNewUrlParser: true,
@@ -18,7 +18,7 @@ mongoose.connect(mongoUri, {
 });
 
 mongoose.connection.on("connected", () => {
-  console.log("connected to mongo yeahhh");
+  console.log("connected to mongoDB");
 });
 mongoose.connection.on("error", (err) => {
   console.log("error", err);
@@ -84,6 +84,6 @@ app.post("/update", (req, res) => {
     });
 });
 
-app.listen(3000, () => {
+app.listen(3001, () => {
   console.log("server running");
 });
